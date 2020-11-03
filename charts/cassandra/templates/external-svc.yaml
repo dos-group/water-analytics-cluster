@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cassandra-external
+  labels: {{- include "cassandra.labels" . | nindent 4 }}
+spec:
+  type: NodePort
+  ports:
+  - name: cassandra-port
+    port: {{ .Values.service.port }}
+    targetPort: {{ .Values.service.port }}
+    {{- if (not (empty .Values.service.nodePorts.cql)) }}
+    nodePort: {{ .Values.service.nodePorts.cql }}
+    {{- end }}
+  selector:
+    app: {{- include "cassandra.matchLabels" . | nindent 4 }}

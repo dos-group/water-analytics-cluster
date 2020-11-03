@@ -1,0 +1,25 @@
+# create an interal clusterip service for amqp and mqtt if not created with nodeports
+{{- if (and (eq .Values.service.type "NodePort") (.Values.auth.tls.disableNonTlsNodePorts)) }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-internal
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.service.labels }}
+    {{- include "common.tplvalues.render" (dict "value" .Values.service.labels "context" $) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.service.annotations }}
+  annotations: {{- include "common.tplvalues.render" (dict "value" .Values.service.annotations "context" $) | nindent 4 }}
+  {{- end }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: amqp
+      port: {{ .Values.service.port }}
+      targetPort: amqp
+    - name: mqtt
+      port: {{ .Values.service.mqttPort }}
+      targetPort: mqtt
+  selector: {{ include "common.labels.matchLabels" . | nindent 4 }}
+{{- end }}

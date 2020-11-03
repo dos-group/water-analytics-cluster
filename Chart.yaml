@@ -1,0 +1,40 @@
+apiVersion: v2
+name: water-analytics-cluster
+description: A Helm chart for Kubernetes
+
+# A chart can be either an 'application' or a 'library' chart.
+# Application charts are a collection of templates that can be packaged into versioned archives
+# to be deployed.
+type: application
+
+# This is the chart version. This version number should be incremented each time you make changes
+# to the chart and its templates, including the app version.
+# Versions are expected to follow Semantic Versioning (https://semver.org/)
+version: 0.1.0
+
+# This is the version number of the application being deployed. This version number should be
+# incremented each time you make changes to the application. Versions are not expected to
+# follow Semantic Versioning. They should reflect the version the application is using.
+appVersion: 1.0.0
+
+# A list of all deployable sub-charts
+# condition is used for enabling/disabling charts. It reads from values.yaml, resolves to a boolean.
+dependencies:
+  - name: cassandra
+    condition: cassandra.enabled
+  - name: flink
+    condition: flink.enabled
+  - name: grafana
+    condition: grafana.enabled
+  - name: kafka
+    condition: kafka.enabled
+  - name: prometheus
+    condition: prometheus.enabled
+  - name: provisioner
+    condition: provisioner.enabled
+  - name: rabbitmq
+    condition: rabbitmq.enabled
+  - name: redis
+    condition: redis.enabled
+  - name: zookeeper
+    condition: zookeeper.enabled

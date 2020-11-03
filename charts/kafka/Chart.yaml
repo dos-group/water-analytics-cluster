@@ -1,0 +1,15 @@
+apiVersion: v1
+description: Apache Kafka is publish-subscribe messaging rethought as a distributed
+  commit log.
+name: kafka
+version: 0.21.2
+appVersion: 5.0.1
+keywords:
+- kafka
+- zookeeper
+- kafka statefulset
+home: https://kafka.apache.org/
+# A list of all deployable sub-charts
+# condition is used for enabling/disabling charts. It reads from values.yaml, resolves to a boolean.
+dependencies:
+  - name: zookeeper

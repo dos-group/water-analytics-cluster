@@ -1,0 +1,182 @@
+# Default values for water-analytics-cluster.
+# Declare variables to be passed into your templates.
+# Variables will overwrite values in each subchart's values.yaml
+
+###########################################
+## Global variables for the cassandra chart
+cassandra:
+  ## boolean to enable/disable chart
+  enabled: true
+
+  ## configure cluster size
+  replicas: 3
+
+  ## configure the cql NodePort for external access
+  ## will be configured automatically if left empty
+  service:
+    nodePorts:
+      cql: 30001
+
+  ## configure the database credentials
+  dbUser:
+    user: gis
+    forcePassword: true
+    password: 123456
+
+  ## enable client to node encryption by setting clientEncryption: true
+  ## and adding a secret with the keystore, keystore password, truststore, truststore password
+  ##
+  ## To create a secret:
+  ## kubectl create secret generic cassandra-tls --from-file=keystore=./keystore \
+  ##   --from-file=truststore=./truststore --from-literal=keystore-password=cassandra \
+  ##   --from-literal=truststore-password=cassandra
+  ##
+  ## Comment out tlsEncryptionSecretName if client encryption is disabled
+  cluster:
+    clientEncryption: false
+  #tlsEncryptionSecretName: cassandra-tls
+
+
+#######################################
+## Global variables for the flink chart
+flink:
+  ## boolean to enable/disable chart
+  enabled: true
+
+  ## configure jobmanager cluster size
+  jobmanager:
+    replicas: 1
+
+  ## configure flink taskmanager cluster size
+  taskmanager:
+    replicas: 4
+
+  ## configure the NodePort for external access
+  ## will be configured automatically if left empty
+  #nodePort: 31337
+
+  ## High availability configurations
+  highAvailability:
+    enabled: false
+
+    ## The path where metadata for master recovery is persisted. While ZooKeeper stores
+    ## the small ground truth for checkpoint and leader election, this location stores
+    ## the larger objects, like persisted dataflow graphs.
+    ##
+    ## Must be a durable file system that is accessible from all nodes
+    ## (like HDFS, S3, Ceph, nfs, ...)
+    storageDir: hdfs:///flink/ha
+
+    ## The list of ZooKeeper quorum peers that coordinate the high-availability
+    ## setup. This must be a list of the form:
+    ## "host1:clientPort,host2:clientPort,..." (default clientPort: 2181)
+    zookeeperQuorum: zk-0.zk-hs.namespace.svc.cluster.local:2181
+
+    ## The ID of the Flink cluster, used to separate multiple Flink clusters from each other.
+    ## Needs to be set for standalone clusters but is automatically inferred in YARN and Mesos.
+    clusterId: /flink
+
+#########################################
+## Global variables for the grafana chart
+grafana:
+  ## boolean to enable/disable chart
+  enabled: true
+
+  ## configure cluster size
+  replicas: 1
+
+
+#########################################
+## Global variables for the kafka chart
+kafka:
+  ## boolean to enable/disable chart
+  enabled: true
+
+  ## configure cluster size
+  replicas: 4
+
+  ## configure NodePorts for external access
+  ## Ports in firstListenerPort  advertised.listeners must match
+  ## NodePorts = $(firstListenerPort + replicaNumber)
+  external:
+    firstListenerPort: 32090
+
+  configurationOverrides:
+    "advertised.listeners": |-
+      EXTERNAL://${HOST_IP}:$((32090 + ${KAFKA_BROKER_ID}))
+
+
+############################################
+## Global variables for the prometheus chart
+prometheus:
+  ## boolean to enable/disable chart
+  enabled: true
+
+  ## configure cluster size
+  replicas: 1
+
+
+#######################################
+## Enable the Local PV Static Provisioner chart
+provisioner:
+  enabled: false
+
+
+##########################################
+## Global variables for the rabbitmq chart
+rabbitmq:
+  ## boolean to enable/disable chart
+  enabled: true
+
+  ## configure cluster size
+  replicas: 3
+
+  ## configure NodePorts for external access
+  service:
+      ## Amqp NodePort
+      amqpNodePort: 30778
+
+      ## Amqp NodePort Tls
+      amqpTlsNodePort: 30777
+
+      ## MQTT NodePort
+      mqttNodePort: 31778
+
+      ## MQTT NodePort Tls
+      mqttTlsNodePort: 31777
+
+  ## enable TLS support by setting enabled: true
+  ## and providing a secret containing the certificates
+  ##
+  ## To create the secret:
+  ## kubectl create secret generic rabbitmq-certificates --from-file=./ca.crt \
+  ## --from-file=./tls.crt --from-file=./tls.key
+  tls:
+    enabled: true
+    existingSecret: rabbitmq-certificates
+
+  ## load a definitions file to configure RabbitMQ from a Kubernetes secret
+  loadDefinition:
+    enabled: true
+    existingSecret: load-definition
+
+#######################################
+## Global variables for the redis chart
+redis:
+  enabled: true
+
+  ## configure cluster size
+  replicas: 1
+
+  ## configure the NodePort for external access
+  ## will be configured automatically if left empty
+  #nodePort: 31002
+
+
+#######################################
+## Global variables for the redis chart
+zookeeper:
+  enabled: false
+
+  ## configure cluster size
+  replicas: 3

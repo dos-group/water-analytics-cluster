@@ -1,0 +1,16 @@
+# Default values for grafana.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+## Configure resource requests and limits
+## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+resources:
+  limits:
+    cpu: "500m"
+    memory: 2500Mi
+  requests:
+    cpu: "100m"
+    memory: 100Mi
+
+## Change number of replicas below:
+replicas: 1

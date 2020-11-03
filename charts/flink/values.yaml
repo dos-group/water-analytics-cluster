@@ -1,0 +1,64 @@
+# Default values for flink.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+## Change flink jobmanager configuration parameters below:
+jobmanager:
+  replicas: 1
+
+  ## Configure resource requests and limits
+  ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  resources:
+    requests:
+      memory: "4096Mi"
+    limits:
+      memory: "4096Mi"
+  ## jobmanager.memory.process.size in configmap
+  configMemory: "4096m"
+
+  ## Liveness (and eventually Readiness) probe values.
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+  livenessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 60
+
+## Change flink taskmanager configuration parameters below:
+taskmanager:
+  replicas: 6
+
+  ## Configure resource requests and limits
+  ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  resources:
+    requests:
+      memory: "4096Mi"
+    limits:
+      memory: "4096Mi"
+  ## taskmanager.memory.process.size in configmap
+  configMemory: "4096m"
+
+  ## Liveness (and eventually Readiness) probe values.
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+  livenessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 60
+
+## High availability configurations
+highAvailability:
+  enabled: false
+
+  ## The path where metadata for master recovery is persisted. While ZooKeeper stores
+  ## the small ground truth for checkpoint and leader election, this location stores
+  ## the larger objects, like persisted dataflow graphs.
+  ##
+  ## Must be a durable file system that is accessible from all nodes
+  ## (like HDFS, S3, Ceph, nfs, ...)
+  storageDir: hdfs:///flink/ha
+
+  ## The list of ZooKeeper quorum peers that coordinate the high-availability
+  ## setup. This must be a list of the form:
+  ## "host1:clientPort,host2:clientPort,..." (default clientPort: 2181)
+  zookeeperQuorum: zk-0.zk-hs.namespace.svc.cluster.local:2181
+
+  ## The ID of the Flink cluster, used to separate multiple Flink clusters from each other.
+  ## Needs to be set for standalone clusters but is automatically inferred in YARN and Mesos.
+  clusterId: /flink

@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: flink-config
+  labels:
+    app: flink
+data:
+  flink-conf.yaml: |+
+    jobmanager.rpc.port: 6123
+    jobmanager.web.address: 0.0.0.0
+    jobmanager.memory.process.size: {{ .Values.jobmanager.configMemory }}
+    jobmanager.rpc.address: flink-jobmanager
+    jobmanager.memory.jvm-metaspace.size: 1024m
+    taskmanager.numberOfTaskSlots: 1
+    taskmanager.rpc.port: 6122
+    taskmanager.memory.process.size: {{ .Values.taskmanager.configMemory }}
+    taskmanager.memory.jvm-metaspace.size: 1024m
+    blob.server.port: 6124
+    rest.address: 0.0.0.0
+    rest.bind-address: 0.0.0.0
+    rest.port: 8081
+    heartbeat.interval: 5000
+    heartbeat.timeout: 20000
+    #metrics.latency.granularity: OPERATOR
+    #metrics.latency.interval: 1000
+    metrics.reporters: prom
+    metrics.reporter.prom.class: org.apache.flink.metrics.prometheus.PrometheusReporter
+    metrics.reporter.prom.port: 9999
+    ## JAVA_OPTS
+    env.java.opts: -Dio.netty.noPreferDirect=true -XX:MaxDirectMemorySize=1024M  
+    ## High Availabilty
+    {{- if .Values.highAvailability.enabled }}
+    high-availability: zookeeper
+    high-availability.zookeeper.client.acl: open
+    high-availability.jobmanager.port: 6123
+    high-availability.storageDir: {{ .Values.highAvailability.storageDir }}
+    high-availability.zookeeper.quorum: {{ .Values.highAvailability.zookeeperQuorum }}
+    high-availability.cluster-id: {{ .Values.highAvailability.clusterId }}
+    {{- end}}
+
+  log4j.properties: |+
+    log4j.rootLogger=INFO, file, stdout
+    log4j.appender.file=org.apache.log4j.RollingFileAppender
+    log4j.appender.file.File=/tmp/water_analytics_job.log
+    log4j.appender.file.MaxFileSize=10MB
+    log4j.appender.file.MaxBackupIndex=10
+    log4j.appender.file.layout=org.apache.log4j.PatternLayout
+    log4j.appender.file.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n
+    log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+    log4j.appender.stdout.Target=System.out
+    log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+    log4j.appender.stdout.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n
+    #log4j.rootLogger=INFO, file
+    #log4j.logger.akka=INFO
+    #log4j.logger.org.apache.kafka=INFO
+    #log4j.logger.org.apache.hadoop=INFO
+    #log4j.logger.org.apache.zookeeper=INFO
+    #log4j.appender.file=org.apache.log4j.FileAppender
+    #log4j.appender.file.file=${log.file}
+    #log4j.appender.file.layout=org.apache.log4j.PatternLayout
+    #log4j.appender.file.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p %-60c %x - %m%n
+    #log4j.logger.org.apache.flink.shaded.akka.org.jboss.netty.channel.DefaultChannelPipeline=ERROR, file

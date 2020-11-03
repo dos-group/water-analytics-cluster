@@ -1,0 +1,12 @@
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: prometheus-0
+# spec:
+#   type: LoadBalancer
+#   externalTrafficPolicy: Local
+#   selector:
+#     statefulset.kubernetes.io/pod-name: prometheus-0
+#   ports:
+#     - port: 9090
+#       targetPort: 9090
