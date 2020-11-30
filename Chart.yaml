@@ -28,6 +28,8 @@ dependencies:
     condition: grafana.enabled
   - name: kafka
     condition: kafka.enabled
+  - name: kafdrop
+    condition: kafdrop.enabled
   - name: prometheus
     condition: prometheus.enabled
   - name: provisioner

@@ -513,3 +513,6 @@ zookeeper:
   #       labelSelector:
   #         matchLabels:
   #           release: zookeeper
+
+nameOverride: "kafka"
+fullnameOverride: "kafka"
