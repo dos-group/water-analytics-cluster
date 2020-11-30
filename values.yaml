@@ -6,7 +6,7 @@
 ## Global variables for the cassandra chart
 cassandra:
   ## boolean to enable/disable chart
-  enabled: false
+  enabled: true
 
   ## configure cluster size
   replicas: 3
@@ -41,7 +41,7 @@ cassandra:
 ## Global variables for the flink chart
 flink:
   ## boolean to enable/disable chart
-  enabled: false
+  enabled: true
 
   ## configure jobmanager cluster size
   jobmanager:
@@ -80,7 +80,7 @@ flink:
 ## Global variables for the grafana chart
 grafana:
   ## boolean to enable/disable chart
-  enabled: false
+  enabled: true
 
   ## configure cluster size
   replicas: 1
@@ -93,7 +93,7 @@ kafka:
   enabled: true
 
   ## configure cluster size
-  replicas: 3
+  replicas: 4
 
   ## configure NodePorts for external access
   ## Ports in firstListenerPort  advertised.listeners must match
@@ -139,7 +139,7 @@ provisioner:
 ## Global variables for the rabbitmq chart
 rabbitmq:
   ## boolean to enable/disable chart
-  enabled: false
+  enabled: true
 
   ## configure cluster size
   replicas: 3
@@ -176,7 +176,7 @@ rabbitmq:
 #######################################
 ## Global variables for the redis chart
 redis:
-  enabled: false
+  enabled: true
 
   ## configure cluster size
   replicas: 1
