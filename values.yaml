@@ -93,17 +93,16 @@ kafka:
   enabled: true
 
   ## configure cluster size
-  replicas: 4
+  replicas: 3
 
   ## configure NodePorts for external access
-  ## Ports in firstListenerPort  advertised.listeners must match
-  ## NodePorts = $(firstListenerPort + replicaNumber)
-  external:
-    firstListenerPort: 32090
-
-  configurationOverrides:
-    "advertised.listeners": |-
-      EXTERNAL://${HOST_IP}:$((32090 + ${KAFKA_BROKER_ID}))
+  ## Length must be the same as replicaCount
+  externalAccess:
+    service:
+      nodePorts:
+        - 32090
+        - 32091
+        - 32092
 
 
 #########################################

@@ -69,7 +69,7 @@ A RabbitMQ [definitions](https://www.rabbitmq.com/definitions.html) file can be 
 ## Kafka
 [Apache Kafka](https://kafka.apache.org)
 
-[Helm chart source](https://github.com/helm/charts/tree/master/incubator/kafka)
+[Helm chart source](https://github.com/bitnami/charts/tree/master/bitnami/kafka)
 
 
 ## Flink
