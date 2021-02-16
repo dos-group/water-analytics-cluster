@@ -1,0 +1,10 @@
+# Default values for kafka-connect.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+service:
+  mqttServer: tcp://127.0.0.1:1883
+  mqttUser: admin
+  mqttPassword: password
+  mqttTopics: mqttTopic
+  kafkaBroker: 127.0.0.1:9092
+  kafkaTopic: kafkaTopic

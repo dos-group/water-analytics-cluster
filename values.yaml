@@ -106,6 +106,23 @@ kafka:
 
 
 #########################################
+## Global variables for the kafka chart
+kafka-connect:
+  ## boolean to enable/disable chart
+  enabled: true
+
+  # adjust the following values according to your cluster IP
+  # and credentials defined in rabbitMQ (via loadDefinition)
+  service:
+    mqttServer: tcp://127.0.0.1:31777
+    mqttUser: kafka
+    mqttPassword: 12345
+    mqttTopics: mqttSensorDataTopic
+    kafkaBroker: 127.0.0.1:32090
+    kafkaTopic: kafkaSensorDataTopic
+
+
+#########################################
 ## Global variables for the kafdrop chart
 kafdrop:
   ## boolean to enable/disable chart
@@ -146,16 +163,16 @@ rabbitmq:
   ## configure NodePorts for external access
   service:
       ## Amqp NodePort
-      amqpNodePort: 30778
+      amqpNodePort: 30777
 
       ## Amqp NodePort Tls
-      amqpTlsNodePort: 30777
+      amqpTlsNodePort: 30778
 
       ## MQTT NodePort
-      mqttNodePort: 31778
+      mqttNodePort: 31777
 
       ## MQTT NodePort Tls
-      mqttTlsNodePort: 31777
+      mqttTlsNodePort: 31778
 
   ## enable TLS support by setting enabled: true
   ## and providing a secret containing the certificates

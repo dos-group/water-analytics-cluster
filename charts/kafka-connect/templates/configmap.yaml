@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-connect-config
+data:
+    connect-standalone.properties: |-
+        bootstrap.servers={{ .Values.service.kafkaBroker }}
+        key.converter=org.apache.kafka.connect.storage.StringConverter
+        value.converter=org.apache.kafka.connect.storage.StringConverter
+        key.converter.schemas.enable=false
+        value.converter.schemas.enable=false
+        offset.storage.file.filename=/tmp/connect.offsets
+        offset.flush.interval.ms=10000
+        plugin.path=/opt/bitnami/kafka/plugins
+    mqtt.properties: |-
+        name=MqttBridge
+        connector.class=io.confluent.connect.mqtt.MqttSourceConnector
+        mqtt.server.uri={{ .Values.service.mqttServer }}
+        tasks.max=1
+        mqtt.username={{ .Values.service.mqttUser }}
+        mqtt.password={{ .Values.service.mqttPassword }}
+        value.converter=org.apache.kafka.connect.converters.ByteArrayConverter
+        mqtt.topics={{ .Values.service.mqttTopics }}
+        kafka.topic={{ .Values.service.kafkaTopic }}
+        confluent.topic.bootstrap.servers={{ .Values.service.kafkaBroker }}

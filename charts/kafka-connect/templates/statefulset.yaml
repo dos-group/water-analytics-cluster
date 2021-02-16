@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: kafka-connect
+spec:
+  serviceName: kafka-connect 
+  selector:
+    matchLabels:
+      app: kafka-connect
+  template:
+    metadata:
+      labels:
+        app: kafka-connect
+    spec:
+      containers:
+        - name: kafka-mqtt-bridge
+          image: tuberlindos/kafka-connect-mqtt:1.2
+          command:
+            - /bin/bash
+            - -ec
+            - |
+              /opt/bitnami/kafka/bin/connect-standalone.sh /config/connect-standalone.properties /config/mqtt.properties
+          ports:
+            - containerPort: 8083
+          volumeMounts:
+            - name: configuration
+              mountPath: /config
+      volumes:
+          - name: configuration
+            configMap:
+                name: kafka-connect-config

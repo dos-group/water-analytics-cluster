@@ -71,6 +71,9 @@ A RabbitMQ [definitions](https://www.rabbitmq.com/definitions.html) file can be 
 
 [Helm chart source](https://github.com/bitnami/charts/tree/master/bitnami/kafka)
 
+## Kafka Connect
+
+We use [Kafka Connect](https://docs.confluent.io/platform/current/connect/index.html) as a bridge between RabbitMQ and Kafka in order to ensure compatibility with LoRa Network Servers that support integration with MQTT endpoints but not Kafka. Configure the variables defined in values.yaml to match the configuration of your cluster in order for the bridge to work.
 
 ## Flink
 [Apache Flink](https://flink.apache.org)
