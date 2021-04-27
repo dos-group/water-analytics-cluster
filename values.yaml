@@ -39,9 +39,10 @@ cassandra:
 
 #######################################
 ## Global variables for the flink chart
+## DEPRECATED: use flink-native chart instead
 flink:
   ## boolean to enable/disable chart
-  enabled: true
+  enabled: false
 
   ## configure jobmanager cluster size
   jobmanager:
@@ -75,6 +76,21 @@ flink:
     ## The ID of the Flink cluster, used to separate multiple Flink clusters from each other.
     ## Needs to be set for standalone clusters but is automatically inferred in YARN and Mesos.
     clusterId: /flink
+
+#######################################
+## Global variables for the flink native kubernetes chart
+flink-native:
+  ## boolean to enable/disable chart
+  enabled: true
+
+  ## The cluster-id is used for identifying a unique Flink cluster.
+  ## The id must only contain lowercase alphanumeric characters and "-".
+  clusterid: "flink-native"
+
+  ## configure the NodePort for external access
+  ## will be configured automatically if left empty
+  #nodePort: 30881
+
 
 #########################################
 ## Global variables for the grafana chart

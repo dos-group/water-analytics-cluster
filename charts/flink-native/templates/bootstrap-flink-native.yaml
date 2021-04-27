@@ -1,0 +1,44 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: bootstrap-flink-native
+spec:
+  backoffLimit: 5
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: flink
+        image: {{ .Values.image }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        command: ["/bin/bash", "-c", "$FLINK_HOME/bin/kubernetes-session.sh \
+        -Dkubernetes.cluster-id={{ .Values.clusterid }} \
+        -Dkubernetes.namespace={{ .Release.Namespace }} \
+        -Dkubernetes.container.image={{ .Values.image }} \
+        -Dkubernetes.rest-service.exposed.type=ClusterIP \
+        -Dkubernetes.service-account=default \
+        -Dkubernetes.jobmanager.annotations={{ .Values.jobmanager.annotations }} \
+        -Dkubernetes.jobmanager.labels={{ .Values.jobmanager.labels }} \
+        -Dkubernetes.taskmanager.annotations={{ .Values.taskmanager.annotations }} \
+        -Dkubernetes.taskmanager.labels={{ .Values.taskmanager.labels }} \
+        -Djobmanager.memory.process.size={{ .Values.jobmanager.configMemory }} \
+        -Djobmanager.memory.jvm-metaspace.size=2048m \
+        -Dtaskmanager.memory.process.size={{ .Values.taskmanager.configMemory }} \
+        -Dtaskmanager.memory.jvm-metaspace.size=2048m \
+        -Dmetrics.latency.granularity=operator \
+        -Dmetrics.latency.interval=1000 \
+        -Dmetrics.reporters=prom \
+        -Dmetrics.reporter.prom.class=org.apache.flink.metrics.prometheus.PrometheusReporter \
+        -Dmetrics.reporter.prom.port=9999 \
+        {{- if .Values.s3.enabled }}
+        -Ds3.host={{ .Values.s3.host }} \
+        -Ds3.endpoint={{ .Values.s3.endpoint }} \
+        -Ds3.access-key={{ .Values.s3.accessKey }} \
+        -Ds3.secret-key={{ .Values.s3.secretKey }} \
+        -Ds3.ssl.enabled={{ .Values.s3.sslEnabled }} \
+        {{- end }}
+        {{- if .Values.highAvailability.enabled }}
+        -Dhigh-availability=org.apache.flink.kubernetes.highavailability.KubernetesHaServicesFactory \
+        -Dhigh-availability.storageDir={{ .Values.highAvailability.storageDir }}
+        {{- end }}
+        "]

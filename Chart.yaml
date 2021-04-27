@@ -24,6 +24,8 @@ dependencies:
     condition: cassandra.enabled
   - name: flink
     condition: flink.enabled
+  - name: flink-native
+    condition: flink-native.enabled
   - name: grafana
     condition: grafana.enabled
   - name: kafka

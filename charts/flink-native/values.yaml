@@ -1,0 +1,59 @@
+# Default values for flink.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+## flink image
+image: morgel/flink:1.12.1-bin-scala_2.12-java11-debian-v4
+
+imagePullPolicy: IfNotPresent
+
+## The cluster-id is used for identifying a unique Flink cluster.
+## The id must only contain lowercase alphanumeric characters and "-".
+clusterid: "flink-native"
+
+## configure the NodePort for external access
+## will be configured automatically if left empty
+#nodePort:
+
+
+jobmanager:
+  ## The user-specified annotations that are set to the JobManager pod.
+  ## The value could be in the form of a1:v1,a2:v2
+  annotations: "prometheus.io/scrape:true,prometheus.io/port:9999"
+
+  ## The labels to be set for JobManager pod. Specified as key:value pairs separated by commas.
+  ## For example, version:alphav1,deploy:test.
+  labels: "component:jobmanager"
+
+  ## jobmanager.memory.process.size
+  configMemory: "4096m"
+
+taskmanager:
+  ## The user-specified annotations that are set to the JobManager pod.
+  ## The value could be in the form of a1:v1,a2:v2
+  annotations: "prometheus.io/scrape:true,prometheus.io/port:9999"
+
+  ## The labels to be set for JobManager pod. Specified as key:value pairs separated by commas.
+  ## For example, version:alphav1,deploy:test.
+  labels: "component:taskmanager"
+
+  ## taskmanager.memory.process.size
+  configMemory: "4096m"
+
+
+## High availability configurations
+highAvailability:
+  enabled: false
+
+  ## Must be a durable file system that is accessible from all nodes
+  ## (like HDFS, S3, Ceph, nfs, ...)
+  storageDir: hdfs:///flink/ha
+
+## s3 configurations
+s3:
+  enabled: false
+  host: rook-ceph-rgw-my-store.rook-ceph
+  endpoint: 10.233.63.247:80
+  accessKey: T4VSBQ32LDLDEJJ2DFR0
+  secretKey: 5I3S5TPP7qLjrheqjV0TiJ6kV94Ni4PQopsiB10g
+  sslEnabled: false

@@ -23,3 +23,5 @@ data:
         mqtt.topics={{ .Values.service.mqttTopics }}
         kafka.topic={{ .Values.service.kafkaTopic }}
         confluent.topic.bootstrap.servers={{ .Values.service.kafkaBroker }}
+        mqtt.connect.timeout.seconds=60
+        mqtt.keepalive.interval.seconds=15
